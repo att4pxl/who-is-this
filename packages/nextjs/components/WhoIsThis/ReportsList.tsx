@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { ReportCard } from "./ReportCard";
 import { useAccount, usePublicClient } from "wagmi";
 import { useScaffoldReadContract, useScaffoldWriteContract } from "~~/hooks/scaffold-eth";
@@ -39,86 +39,87 @@ export const ReportsList = () => {
     contractName: "WhoIsThis",
   });
 
-  useEffect(() => {
-    const loadReports = async () => {
-      if (!reportCount || !publicClient || !connectedAddress) return;
+  const loadReports = useCallback(async () => {
+    if (!reportCount || !publicClient || !connectedAddress) return;
 
-      const count = Number(reportCount);
-      const loadedReports: Report[] = [];
+    const count = Number(reportCount);
+    const loadedReports: Report[] = [];
 
-      for (let i = 0; i < count; i++) {
-        try {
-          const contractABI = [
-            {
-              inputs: [{ internalType: "uint256", name: "_reportId", type: "uint256" }],
-              name: "getReport",
-              outputs: [
-                { internalType: "uint256", name: "id", type: "uint256" },
-                { internalType: "string", name: "title", type: "string" },
-                { internalType: "uint256", name: "good", type: "uint256" },
-                { internalType: "uint256", name: "bad", type: "uint256" },
-                { internalType: "address[]", name: "voters", type: "address[]" },
-                { internalType: "uint256", name: "voterCount", type: "uint256" },
-                { internalType: "address", name: "reporter", type: "address" },
-                { internalType: "bool", name: "reporterClaimed", type: "bool" },
-              ],
-              stateMutability: "view",
-              type: "function",
-            },
-            {
-              inputs: [
-                { internalType: "uint256", name: "_reportId", type: "uint256" },
-                { internalType: "address", name: "_voter", type: "address" },
-              ],
-              name: "hasVoterClaimed",
-              outputs: [{ internalType: "bool", name: "", type: "bool" }],
-              stateMutability: "view",
-              type: "function",
-            },
-          ];
+    for (let i = 0; i < count; i++) {
+      try {
+        const contractABI = [
+          {
+            inputs: [{ internalType: "uint256", name: "_reportId", type: "uint256" }],
+            name: "getReport",
+            outputs: [
+              { internalType: "uint256", name: "id", type: "uint256" },
+              { internalType: "string", name: "title", type: "string" },
+              { internalType: "uint256", name: "good", type: "uint256" },
+              { internalType: "uint256", name: "bad", type: "uint256" },
+              { internalType: "address[]", name: "voters", type: "address[]" },
+              { internalType: "uint256", name: "voterCount", type: "uint256" },
+              { internalType: "address", name: "reporter", type: "address" },
+              { internalType: "bool", name: "reporterClaimed", type: "bool" },
+            ],
+            stateMutability: "view",
+            type: "function",
+          },
+          {
+            inputs: [
+              { internalType: "uint256", name: "_reportId", type: "uint256" },
+              { internalType: "address", name: "_voter", type: "address" },
+            ],
+            name: "hasVoterClaimed",
+            outputs: [{ internalType: "bool", name: "", type: "bool" }],
+            stateMutability: "view",
+            type: "function",
+          },
+        ];
 
-          const reportData = (await publicClient.readContract({
-            address: "0xA0EB6dfEc8b60c5CC68D599c6DFDD8BbD797cF35",
-            abi: contractABI,
-            functionName: "getReport",
-            args: [BigInt(i)],
-          })) as readonly [bigint, string, bigint, bigint, readonly `0x${string}`[], bigint, string, boolean];
+        const reportData = (await publicClient.readContract({
+          address: "0xA0EB6dfEc8b60c5CC68D599c6DFDD8BbD797cF35",
+          abi: contractABI,
+          functionName: "getReport",
+          args: [BigInt(i)],
+        })) as readonly [bigint, string, bigint, bigint, readonly `0x${string}`[], bigint, string, boolean];
 
-          const hasVoterClaimed = (await publicClient.readContract({
-            address: "0xA0EB6dfEc8b60c5CC68D599c6DFDD8BbD797cF35",
-            abi: contractABI,
-            functionName: "hasVoterClaimed",
-            args: [BigInt(i), connectedAddress],
-          })) as boolean;
+        const hasVoterClaimed = (await publicClient.readContract({
+          address: "0xA0EB6dfEc8b60c5CC68D599c6DFDD8BbD797cF35",
+          abi: contractABI,
+          functionName: "hasVoterClaimed",
+          args: [BigInt(i), connectedAddress],
+        })) as boolean;
 
-          if (reportData) {
-            loadedReports.push({
-              id: reportData[0],
-              title: reportData[1],
-              good: reportData[2],
-              bad: reportData[3],
-              voters: reportData[4],
-              voterCount: reportData[5],
-              reporter: reportData[6],
-              reporterClaimed: reportData[7],
-              voterClaimed: hasVoterClaimed,
-            });
-          }
-        } catch (error) {
-          console.error(`Error loading report ${i}:`, error);
+        if (reportData) {
+          loadedReports.push({
+            id: reportData[0],
+            title: reportData[1],
+            good: reportData[2],
+            bad: reportData[3],
+            voters: reportData[4],
+            voterCount: reportData[5],
+            reporter: reportData[6],
+            reporterClaimed: reportData[7],
+            voterClaimed: hasVoterClaimed,
+          });
         }
+      } catch (error) {
+        console.error(`Error loading report ${i}:`, error);
       }
+    }
 
-      setReports(loadedReports);
-    };
-
-    loadReports();
+    setReports(loadedReports);
   }, [reportCount, publicClient, connectedAddress]);
+
+  useEffect(() => {
+    loadReports();
+  }, [loadReports]);
 
   const handleVote = async (reportId: number, isGood: boolean) => {
     try {
       await vote({ functionName: "vote", args: [BigInt(reportId), isGood] });
-      window.location.reload();
+      // Refetch reports after successful vote
+      await loadReports();
     } catch (error) {
       console.error("Error voting:", error);
     }
@@ -127,7 +128,8 @@ export const ReportsList = () => {
   const handleClaimReporterReward = async (reportId: number) => {
     try {
       await claimReporterReward({ functionName: "claimReporterReward", args: [BigInt(reportId)] });
-      window.location.reload();
+      // Refetch reports after successful claim
+      await loadReports();
     } catch (error) {
       console.error("Error claiming reporter reward:", error);
     }
@@ -136,7 +138,8 @@ export const ReportsList = () => {
   const handleClaimVoterReward = async (reportId: number) => {
     try {
       await claimVoterReward({ functionName: "claimVoterReward", args: [BigInt(reportId)] });
-      window.location.reload();
+      // Refetch reports after successful claim
+      await loadReports();
     } catch (error) {
       console.error("Error claiming voter reward:", error);
     }

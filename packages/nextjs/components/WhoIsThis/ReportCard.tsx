@@ -37,21 +37,21 @@ export const ReportCard = ({
     <div className="bg-base-100 rounded-xl p-6 shadow">
       <div className="flex justify-between items-start mb-4">
         <div className="flex-1">
-          <h3 className="text-xl font-bold">
+          <h3 className="text-xl font-bold text-white">
             #{reportId}: {title}
           </h3>
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-gray-300">
             Reporter: <Address address={reporter} />
           </p>
         </div>
         <div className="flex gap-4">
           <div className="text-center">
             <p className="text-2xl font-bold text-success">{good.toString()}</p>
-            <p className="text-sm text-gray-600">Good</p>
+            <p className="text-sm text-gray-300">Good</p>
           </div>
           <div className="text-center">
             <p className="text-2xl font-bold text-error">{bad.toString()}</p>
-            <p className="text-sm text-gray-600">Bad</p>
+            <p className="text-sm text-gray-300">Bad</p>
           </div>
         </div>
       </div>
@@ -67,7 +67,7 @@ export const ReportCard = ({
             </button>
           </>
         )}
-        {hasVoted && !voterClaimed && <span className="badge badge-info">You voted</span>}
+        {hasVoted && !voterClaimed && <span className="badge badge-success">You voted</span>}
         {hasVoted && voterClaimed && <span className="badge badge-success">Already claimed</span>}
         {canClaimReporter && (
           <button className="btn btn-warning btn-sm" onClick={() => onClaimReporter(reportId)}>
@@ -79,7 +79,7 @@ export const ReportCard = ({
             Claim 1 WITH (Voter)
           </button>
         )}
-        <span className="text-sm text-gray-600 ml-auto">{voterCount.toString()} voters</span>
+        <span className="text-sm text-gray-300 ml-auto">{voterCount.toString()} voters</span>
       </div>
     </div>
   );
