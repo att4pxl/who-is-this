@@ -14,6 +14,7 @@ interface Report {
   voterCount: bigint;
   reporter: string;
   reporterClaimed: boolean;
+  voterClaimed?: boolean;
 }
 
 export const ReportsList = () => {
@@ -40,7 +41,7 @@ export const ReportsList = () => {
 
   useEffect(() => {
     const loadReports = async () => {
-      if (!reportCount || !publicClient) return;
+      if (!reportCount || !publicClient || !connectedAddress) return;
 
       const count = Number(reportCount);
       const loadedReports: Report[] = [];
@@ -64,6 +65,16 @@ export const ReportsList = () => {
               stateMutability: "view",
               type: "function",
             },
+            {
+              inputs: [
+                { internalType: "uint256", name: "_reportId", type: "uint256" },
+                { internalType: "address", name: "_voter", type: "address" },
+              ],
+              name: "hasVoterClaimed",
+              outputs: [{ internalType: "bool", name: "", type: "bool" }],
+              stateMutability: "view",
+              type: "function",
+            },
           ];
 
           const reportData = (await publicClient.readContract({
@@ -72,6 +83,13 @@ export const ReportsList = () => {
             functionName: "getReport",
             args: [BigInt(i)],
           })) as readonly [bigint, string, bigint, bigint, readonly `0x${string}`[], bigint, string, boolean];
+
+          const hasVoterClaimed = (await publicClient.readContract({
+            address: "0xA0EB6dfEc8b60c5CC68D599c6DFDD8BbD797cF35",
+            abi: contractABI,
+            functionName: "hasVoterClaimed",
+            args: [BigInt(i), connectedAddress],
+          })) as boolean;
 
           if (reportData) {
             loadedReports.push({
@@ -83,6 +101,7 @@ export const ReportsList = () => {
               voterCount: reportData[5],
               reporter: reportData[6],
               reporterClaimed: reportData[7],
+              voterClaimed: hasVoterClaimed,
             });
           }
         } catch (error) {
@@ -94,7 +113,7 @@ export const ReportsList = () => {
     };
 
     loadReports();
-  }, [reportCount, publicClient]);
+  }, [reportCount, publicClient, connectedAddress]);
 
   const handleVote = async (reportId: number, isGood: boolean) => {
     try {
@@ -134,7 +153,7 @@ export const ReportsList = () => {
           const hasVoted = connectedAddress ? report.voters.includes(connectedAddress as `0x${string}`) : false;
           const isReporter = connectedAddress === report.reporter;
           const canClaimReporter = isReporter && Number(report.voterCount) >= 2 && !report.reporterClaimed;
-          const canClaimVoter = hasVoted && Number(report.voterCount) >= 2;
+          const canClaimVoter = hasVoted && Number(report.voterCount) >= 2 && !report.voterClaimed;
 
           return (
             <ReportCard
@@ -148,6 +167,7 @@ export const ReportsList = () => {
               hasVoted={hasVoted}
               canClaimReporter={canClaimReporter}
               canClaimVoter={canClaimVoter}
+              voterClaimed={report.voterClaimed}
               connectedAddress={connectedAddress}
               onVote={handleVote}
               onClaimReporter={handleClaimReporterReward}

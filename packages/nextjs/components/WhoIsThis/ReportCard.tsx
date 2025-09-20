@@ -10,6 +10,7 @@ interface ReportCardProps {
   hasVoted: boolean;
   canClaimReporter: boolean;
   canClaimVoter: boolean;
+  voterClaimed?: boolean;
   connectedAddress?: string;
   onVote: (reportId: number, isGood: boolean) => void;
   onClaimReporter: (reportId: number) => void;
@@ -26,6 +27,7 @@ export const ReportCard = ({
   hasVoted,
   canClaimReporter,
   canClaimVoter,
+  voterClaimed,
   connectedAddress,
   onVote,
   onClaimReporter,
@@ -65,7 +67,8 @@ export const ReportCard = ({
             </button>
           </>
         )}
-        {hasVoted && <span className="badge badge-info">You voted</span>}
+        {hasVoted && !voterClaimed && <span className="badge badge-info">You voted</span>}
+        {hasVoted && voterClaimed && <span className="badge badge-success">Already claimed</span>}
         {canClaimReporter && (
           <button className="btn btn-warning btn-sm" onClick={() => onClaimReporter(reportId)}>
             Claim 5 WITH (Reporter)
