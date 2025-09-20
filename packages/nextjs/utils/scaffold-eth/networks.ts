@@ -90,6 +90,9 @@ export const NETWORKS_EXTRA_DATA: Record<string, ChainAttributes> = {
   [chains.celoAlfajores.id]: {
     color: "#476520",
   },
+  [chains.monadTestnet.id]: {
+    color: "#9333ea",
+  },
 };
 
 /**
