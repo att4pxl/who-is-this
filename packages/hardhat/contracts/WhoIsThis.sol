@@ -21,7 +21,7 @@ contract WhoIsThis {
             title: _title,
             good: 0,
             bad: 0,
-            voters: [],
+            voters: new address[](0),
             voterCount: 0
         }));
 
