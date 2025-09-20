@@ -4,6 +4,7 @@ pragma solidity >=0.8.0 <0.9.0;
 interface IERC20 {
     function transfer(address to, uint256 amount) external returns (bool);
     function balanceOf(address account) external view returns (uint256);
+    function mint(address receiver, uint256 amount) external;
 }
 
 contract WhoIsThis {
@@ -74,7 +75,7 @@ contract WhoIsThis {
         require(!reportItem.reporterClaimed, "Already claimed");
 
         reportItem.reporterClaimed = true;
-        require(WITH_TOKEN.transfer(msg.sender, REPORTER_REWARD), "Transfer failed");
+        WITH_TOKEN.mint(msg.sender, REPORTER_REWARD);
     }
 
     function claimVoterReward(uint256 _reportId) external {
@@ -94,7 +95,7 @@ contract WhoIsThis {
         require(!reportItem.voterClaimed[msg.sender], "Already claimed");
 
         reportItem.voterClaimed[msg.sender] = true;
-        require(WITH_TOKEN.transfer(msg.sender, VOTER_REWARD), "Transfer failed");
+        WITH_TOKEN.mint(msg.sender, VOTER_REWARD);
     }
 
     function getReportCount() external view returns (uint256) {
