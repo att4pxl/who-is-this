@@ -1,21 +1,26 @@
-# 🏗 Scaffold-ETH 2 with Hardhat + Monad Testnet Configuration 
+# 🔍 Who Is This
 
-<h4 align="center">
-  <a href="https://docs.scaffoldeth.io">Documentation</a> |
-  <a href="https://scaffoldeth.io">Website</a>
-</h4>
+**A decentralized reporting and voting platform built on Monad Testnet**
 
-🧪 An open-source, up-to-date toolkit for building decentralized applications (dapps) on the Ethereum blockchain. It's designed to make it easier for developers to create and deploy smart contracts and build user interfaces that interact with those contracts.
+Report suspicious activities and vote on community submissions to earn WITH tokens. Built with transparency and community governance in mind.
 
-⚙️ Built using NextJS, RainbowKit, Hardhat, Wagmi, Viem, and Typescript.
+## 🚀 Features
 
-- ✅ **Contract Hot Reload**: Your frontend auto-adapts to your smart contract as you edit it.
-- 🪝 **[Custom hooks](https://docs.scaffoldeth.io/hooks/)**: Collection of React hooks wrapper around [wagmi](https://wagmi.sh/) to simplify interactions with smart contracts with typescript autocompletion.
-- 🧱 [**Components**](https://docs.scaffoldeth.io/components/): Collection of common web3 components to quickly build your frontend.
-- 🔥 **Burner Wallet & Local Faucet**: Quickly test your application with a burner wallet and local faucet.
-- 🔐 **Integration with Wallet Providers**: Connect to different wallet providers and interact with the Ethereum network.
+- 📝 **Create Reports**: Submit reports about suspicious activities
+- 🗳️ **Community Voting**: Vote on reports as "Good" or "Bad"
+- 🪙 **Token Rewards**: Earn WITH tokens for reporting and voting
+- 🏆 **Claim System**: Reporters and voters can claim rewards when reports reach minimum vote threshold
+- 👥 **Transparency**: View all voters and their addresses for each report
+- 🔒 **Smart Contract Security**: Built with robust Solidity contracts
 
-![Debug Contracts tab](https://github.com/scaffold-eth/scaffold-eth-2/assets/55535804/b237af0c-5027-4849-a5c1-2e31495cccb1)
+## 🛠️ Tech Stack
+
+⚙️ Built using NextJS, RainbowKit, Hardhat, Wagmi, Viem, and Typescript on Monad Testnet.
+
+- ✅ **Real-time Updates**: UI updates without page reloads after transactions
+- 🪝 **Custom Hooks**: React hooks for seamless smart contract interactions
+- 🧱 **Web3 Components**: Pre-built components for blockchain interactions
+- 🔐 **Wallet Integration**: Connect with multiple wallet providers
 
 ## Requirements
 
@@ -25,90 +30,90 @@ Before you begin, you need to install the following tools:
 - Yarn ([v1](https://classic.yarnpkg.com/en/docs/install/) or [v2+](https://yarnpkg.com/getting-started/install))
 - [Git](https://git-scm.com/downloads)
 
-## Quickstart
+## 🚀 Getting Started
 
-To get started with Scaffold-ETH 2, follow the steps below:
+To set up and run the Who Is This platform locally:
 
-1. Install dependencies if it was skipped in CLI:
+### Prerequisites
 
-```
-cd my-dapp-example
+Ensure you have the Monad Testnet configured in your wallet:
+- **Network Name**: Monad Testnet
+- **RPC URL**: https://testnet-rpc.monad.xyz
+- **Chain ID**: 10143
+- **Currency Symbol**: MON
+
+### Installation
+
+1. Clone and install dependencies:
+
+```bash
+git clone <repository-url>
+cd who-is-this
 yarn install
 ```
 
-2. Run a local network in the first terminal:
+2. Start the development server:
 
-```
-yarn chain
-```
-
-This command starts a local Ethereum network using Hardhat. The network runs on your local machine and can be used for testing and development. You can customize the network configuration in `packages/hardhat/hardhat.config.ts`.
-
-3. On a second terminal, deploy the test contract:
-
-```
-yarn deploy
-```
-
-This command deploys a test smart contract to the local network. The contract is located in `packages/hardhat/contracts` and can be modified to suit your needs. The `yarn deploy` command uses the deploy script located in `packages/hardhat/deploy` to deploy the contract to the network. You can also customize the deploy script.
-
-4. On a third terminal, start your NextJS app:
-
-```
+```bash
 yarn start
 ```
 
-Visit your app on: `http://localhost:3000`. You can interact with your smart contract using the `Debug Contracts` page. You can tweak the app config in `packages/nextjs/scaffold.config.ts`.
+3. Visit the app at `http://localhost:3000`
 
-Run smart contract test with `yarn hardhat:test`
+4. Connect your wallet and switch to Monad Testnet
 
-- Edit your smart contracts in `packages/hardhat/contracts`
-- Edit your frontend homepage at `packages/nextjs/app/page.tsx`. For guidance on [routing](https://nextjs.org/docs/app/building-your-application/routing/defining-routes) and configuring [pages/layouts](https://nextjs.org/docs/app/building-your-application/routing/pages-and-layouts) checkout the Next.js documentation.
-- Edit your deployment scripts in `packages/hardhat/deploy`
+### Smart Contracts
+
+The platform uses deployed smart contracts on Monad Testnet:
+
+- **WhoIsThis Contract**: `0xA0EB6dfEc8b60c5CC68D599c6DFDD8BbD797cF35`
+- **WITH Token Contract**: `0xe3599c93c092817f79Ec1e090998684B86343794`
+
+### Usage
+
+1. **Create a Report**: Submit a title describing suspicious activity
+2. **Vote on Reports**: Vote "Good" or "Bad" on community reports
+3. **Claim Rewards**:
+   - Reporters earn 5 WITH tokens when their report gets 2+ votes
+   - Voters earn 1 WITH token when they vote on reports with 2+ total votes
+4. **View Transparency**: See all voter addresses for each report
+
+### Development
+
+- Smart contracts: `packages/hardhat/contracts/`
+- Frontend: `packages/nextjs/app/`
+- Configuration: `packages/nextjs/scaffold.config.ts`
 
 
-## Contract Verification
+## 🔗 Smart Contract Details
 
-After deploying your smart contract to a testnet or mainnet, you can verify it on block explorers like Etherscan or Sourcify. This makes your contract source code publicly available and allows users to interact with it through the block explorer.
+### WhoIsThis Contract Functions
 
-### Sourcify Verification (Recommended)
+- `report(string _title)`: Create a new report
+- `vote(uint256 _reportId, bool _isGood)`: Vote on a report (true = good, false = bad)
+- `claimReporterReward(uint256 _reportId)`: Claim 5 WITH tokens as reporter
+- `claimVoterReward(uint256 _reportId)`: Claim 1 WITH token as voter
+- `getReport(uint256 _reportId)`: Get report details
+- `getReportCount()`: Get total number of reports
+- `hasVoterClaimed(uint256 _reportId, address _voter)`: Check if voter already claimed
 
-Scaffold-ETH 2 is configured to use Sourcify for contract verification by default. Sourcify is a decentralized verification platform that supports multiple block explorers.
+### Reward System
 
-#### For Monad Testnet
+- **Minimum Voters for Rewards**: 2 voters required
+- **Reporter Reward**: 5 WITH tokens per qualifying report
+- **Voter Reward**: 1 WITH token per qualifying vote
+- **Token Supply**: WITH token with minting capabilities for rewards
 
-1. Deploy your contract to Monad testnet:
-```bash
-yarn deploy --network monadTestnet
-```
+## 🔍 Explorer Links
 
-2. Verify your contract using the hardhat-deploy plugin:
-```bash
-yarn hardhat-verify --network monadTestnet <CONTRACT_ADDRESS>
-```
+- **Monad Testnet Explorer**: https://testnet.monadexplorer.com
+- **View WhoIsThis Contract**: https://testnet.monadexplorer.com/address/0xA0EB6dfEc8b60c5CC68D599c6DFDD8BbD797cF35
+- **View WITH Token**: https://testnet.monadexplorer.com/address/0xe3599c93c092817f79Ec1e090998684B86343794
 
-Replace `<CONTRACT_ADDRESS>` with the address of your deployed contract.
+## 🤝 Contributing
 
-#### Configuration
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-The Sourcify configuration is already set up in `packages/hardhat/hardhat.config.ts`:
+## 📄 License
 
-```typescript
-sourcify: {
-  enabled: true,
-  apiUrl: "https://sourcify-api-monad.blockvision.org",
-  browserUrl: "https://testnet.monadexplorer.com",
-},
-```
-
-## Documentation
-
-Visit our [docs](https://docs.scaffoldeth.io) to learn how to start building with Scaffold-ETH 2.
-
-To know more about its features, check out our [website](https://scaffoldeth.io).
-
-## Contributing to Scaffold-ETH 2
-
-We welcome contributions to Scaffold-ETH 2!
-
-Please see [CONTRIBUTING.MD](https://github.com/scaffold-eth/scaffold-eth-2/blob/main/CONTRIBUTING.md) for more information and guidelines for contributing to Scaffold-ETH 2.
+This project is built using Scaffold-ETH 2 framework and follows MIT License.
