@@ -167,6 +167,7 @@ export const ReportsList = () => {
               bad={report.bad}
               reporter={report.reporter}
               voterCount={report.voterCount}
+              voters={report.voters}
               hasVoted={hasVoted}
               canClaimReporter={canClaimReporter}
               canClaimVoter={canClaimVoter}

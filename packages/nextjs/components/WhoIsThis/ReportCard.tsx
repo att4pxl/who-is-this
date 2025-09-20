@@ -7,6 +7,7 @@ interface ReportCardProps {
   bad: bigint;
   reporter: string;
   voterCount: bigint;
+  voters: readonly `0x${string}`[];
   hasVoted: boolean;
   canClaimReporter: boolean;
   canClaimVoter: boolean;
@@ -24,6 +25,7 @@ export const ReportCard = ({
   bad,
   reporter,
   voterCount,
+  voters,
   hasVoted,
   canClaimReporter,
   canClaimVoter,
@@ -55,6 +57,20 @@ export const ReportCard = ({
           </div>
         </div>
       </div>
+
+      {voters.length > 0 && (
+        <div className="mb-4">
+          <h4 className="text-sm font-semibold text-gray-300 mb-2">Voters ({voters.length}):</h4>
+          <div className="space-y-1">
+            {voters.map((voter, index) => (
+              <div key={index} className="flex items-center">
+                <span className="text-xs text-gray-400 mr-2">#{index + 1}</span>
+                <Address address={voter} />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className="flex gap-2 items-center">
         {!hasVoted && connectedAddress && (
