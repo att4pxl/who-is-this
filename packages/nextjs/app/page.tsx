@@ -14,7 +14,8 @@ const Home: NextPage = () => {
   const { data: withBalance } = useScaffoldReadContract({
     contractName: "WITH",
     functionName: "balanceOf",
-    args: connectedAddress ? [connectedAddress] : undefined,
+    args: [connectedAddress as `0x${string}`],
+    enabled: !!connectedAddress,
   });
 
   return (
