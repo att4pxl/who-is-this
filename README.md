@@ -117,3 +117,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ## 📄 License
 
 This project is built using Scaffold-ETH 2 framework and follows MIT License.
+
+## Demo
+<img width="664" height="534" alt="Screenshot 2568-09-20 at 15 55 13" src="https://github.com/user-attachments/assets/53fce5b5-352e-4cba-a2da-3e75a9f22a40" />
+
