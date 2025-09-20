@@ -22,20 +22,20 @@ const Home: NextPage = () => {
       <div className="flex items-center flex-col grow pt-10">
         <div className="px-5 w-full max-w-7xl">
           <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold mb-2">Who Is This</h1>
-            <p className="text-lg text-gray-600">Report and vote on suspicious activities</p>
-            <p className="text-sm text-gray-500 mt-2">Earn WITH tokens for reporting and voting</p>
+            <h1 className="text-4xl font-bold mb-2 text-white">Who Is This</h1>
+            <p className="text-lg text-gray-300">Report and vote on suspicious activities</p>
+            <p className="text-sm text-gray-300 mt-2">Earn WITH tokens for reporting and voting</p>
           </div>
 
           {connectedAddress && (
             <div className="flex justify-center items-center space-x-8 mb-8">
               <div className="text-center">
-                <p className="text-sm text-gray-600">Your Address</p>
+                <p className="text-sm text-gray-300">Your Address</p>
                 <Address address={connectedAddress} />
               </div>
               <div className="text-center">
-                <p className="text-sm text-gray-600">WITH Balance</p>
-                <p className="text-2xl font-bold">{withBalance ? formatEther(withBalance) : "0"} WITH</p>
+                <p className="text-sm text-gray-300">WITH Balance</p>
+                <p className="text-2xl font-bold text-white">{withBalance ? formatEther(withBalance) : "0"} WITH</p>
               </div>
             </div>
           )}
